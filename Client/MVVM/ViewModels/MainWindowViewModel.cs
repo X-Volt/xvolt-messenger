@@ -1,0 +1,255 @@
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+
+using Avalonia.Threading;
+using AvRichTextBox;
+using ReactiveUI;
+
+using Client.MVVM.Models;
+using Client.Net;
+
+namespace Client.MVVM.ViewModels
+{
+    class MainWindowViewModel : ViewModelBase
+    {
+        private readonly Server _server;
+
+        private bool _loginVisible = true;
+        private string _loginUsername = "";
+        private string _loginPassword = "";
+        private string _loginError = "";
+        
+        private bool _chatPageVisible = false;
+        private bool _settingsPageVisible = false;
+        private bool _newsPageVisible = false;
+
+        public ReactiveCommand<Unit, Unit> LoginRegister { get; set; }
+        public ReactiveCommand<Unit, Unit> LoginSignOn { get; set; }
+
+        public bool LoginVisible
+        {
+            get => _loginVisible;
+            set => this.RaiseAndSetIfChanged(ref _loginVisible, value);
+        }
+
+        public string LoginUsername
+        {
+            get => _loginUsername;
+            set => this.RaiseAndSetIfChanged(ref _loginUsername, value);
+        }
+
+        public string LoginPassword
+        {
+            get => _loginPassword;
+            set => this.RaiseAndSetIfChanged(ref _loginPassword, value);
+        }
+
+        public string LoginError
+        {
+            get => _loginError;
+            set => this.RaiseAndSetIfChanged(ref _loginError, value);
+        }
+
+        public ObservableCollection<UserModel> ChatUsers { get; set; }
+        public ReactiveCommand<Unit, Unit> ChatUserViewMessages { get; set; }
+
+        public FlowDocument ChatPage { get; set; }
+        public bool ChatPageVisible
+        {
+            get => _chatPageVisible;
+            set => this.RaiseAndSetIfChanged(ref _chatPageVisible, value);
+        }
+
+        public FlowDocument ChatMessage { get; set; }
+        public ReactiveCommand<Unit, Unit> ChatSend { get; set; }
+
+        public ReactiveCommand<Unit, Unit> Settings { get; set; }
+        public FlowDocument SettingsPage { get; set; }
+        public bool SettingsPageVisible
+        {
+            get => _settingsPageVisible;
+            set => this.RaiseAndSetIfChanged(ref _settingsPageVisible, value);
+        }
+
+        public ReactiveCommand<Unit, Unit> News { get; set; }
+        public FlowDocument NewsPage { get; set; }
+        public bool NewsPageVisible
+        {
+            get => _newsPageVisible;
+            set => this.RaiseAndSetIfChanged(ref _newsPageVisible, value);
+        }
+
+        public ReactiveCommand<Unit, Unit> Artwork { get; set; }
+
+        public MainWindowViewModel()
+        {
+            _server = new Server();
+            _server.ConnectEvent += UserConnected;
+            _server.DisconnectEvent += UserDisconnected;
+            _server.MessageReceivedEvent += MessageReceived;
+
+            LoginRegister = ReactiveCommand.Create(() => {});
+
+            LoginSignOn = ReactiveCommand.Create(() =>
+            {
+                LoginError = "";
+
+                if (string.IsNullOrWhiteSpace(LoginUsername) || LoginUsername.Length <= 2)
+                {
+                    LoginError = "You have entered an invalid Screen Name";
+                }
+                else
+                {
+                    _server.SignOn(LoginUsername);
+                }
+            });
+
+            ChatUsers = new ObservableCollection<UserModel>();
+            ChatUserViewMessages = ReactiveCommand.Create(() =>
+            {
+                NewsPageVisible = false;
+                SettingsPageVisible = true;
+                ChatPageVisible = true;
+            });
+
+            ChatPage = InitPage("Messages");
+            ChatPageVisible = false;
+
+            ChatMessage = new FlowDocument();
+            ChatSend = ReactiveCommand.Create(() =>
+            {
+                if (ChatMessage.Blocks.Count > 0) {
+                    _server.SendMessage(ChatMessage.SaveXaml());
+
+                    ChatMessage.NewDocument();
+                }
+            });
+
+            SettingsPage = InitPage("Settings");
+            SettingsPageVisible = false;
+            Settings = ReactiveCommand.Create(() => 
+            {
+                ChatPageVisible = false;
+                NewsPageVisible = false;
+                SettingsPageVisible = true;
+            });
+
+            NewsPage = InitPage("Latest News");
+            NewsPageVisible = true;
+            News = ReactiveCommand.Create(() =>
+            {
+                ChatPageVisible = false;
+                SettingsPageVisible = false;
+                NewsPageVisible = true;
+            });
+
+            Artwork = ReactiveCommand.Create(() => {});
+        }
+
+        static private FlowDocument InitPage(string title)
+        {
+            var page = new FlowDocument();
+            page.IsEditable = false;
+            page.ClearDocument();
+
+            // padding must be applied after it is cleared
+            page.PagePadding = new(10, 0, 0, 10);
+            
+            // heading
+            var pagePar = new Paragraph();
+            pagePar.FontSize = 20;
+            pagePar.FontWeight = Avalonia.Media.FontWeight.Bold;
+            pagePar.Inlines.Add(new EditableRun(title));
+
+            page.Blocks.Add(pagePar);
+
+            return page;
+        }
+
+        private void UserConnected()
+        {
+            if (_server.PacketReader != null)
+            {
+                var user = new UserModel
+                {
+                    UID = _server.PacketReader.ReadMessage(),
+                    Username = _server.PacketReader.ReadMessage(),
+                    Command = ChatUserViewMessages
+                };
+
+                if (ChatUsers.Where(x => x.UID == user.UID).FirstOrDefault() == null)
+                {
+                    Dispatcher.UIThread.Invoke(() =>
+                    {
+                        ChatUsers.Add(user);
+
+                        if (user.Username == LoginUsername)
+                        {
+                            LoginUsername = "";
+                            LoginVisible = false;
+
+                            NewsPageVisible = false;
+                            SettingsPageVisible = true;
+                            ChatPageVisible = true;
+                        }
+                    });
+                }
+            }
+        }
+
+        private void UserDisconnected()
+        {
+            if (_server.PacketReader != null)
+            {
+                var uid = _server.PacketReader.ReadMessage();
+                var username = _server.PacketReader.ReadMessage();
+
+                var user = ChatUsers.Where(x => x.UID == uid).FirstOrDefault();
+
+                Dispatcher.UIThread.Invoke(() =>
+                {
+                    if (user != null)
+                    {
+                        ChatUsers.Remove(user);
+                    }
+
+                    var messageParagraph = new Paragraph();
+                    var messageDisconnected = $"[{DateTime.Now}]: [{username}]: Disconnected";
+                    messageParagraph.Inlines.Add(new EditableRun(messageDisconnected));
+
+                    ChatPage.Blocks.Add(messageParagraph);
+                });
+            }
+        }
+
+        private void MessageReceived()
+        {
+            if (_server.PacketReader != null)
+            {
+                var uid = _server.PacketReader.ReadMessage();
+                var username = _server.PacketReader.ReadMessage();
+                var message = _server.PacketReader.ReadMessage();
+
+                Dispatcher.UIThread.Invoke(() =>
+                {
+                    var messageParagraph = new Paragraph();
+                    var messageTimestamp = $"[{DateTime.Now}]: [{username}]:";
+                    messageParagraph.Inlines.Add(new EditableRun(messageTimestamp));
+
+                    ChatPage.Blocks.Add(messageParagraph);
+
+                    var messageFlow = new FlowDocument();
+                    messageFlow.LoadXaml(message);
+
+                    foreach (var block in messageFlow.Blocks)
+                    {
+                        ChatPage.Blocks.Add(block);
+                    }
+                });
+            }
+        }
+    }
+}
