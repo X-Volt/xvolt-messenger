@@ -7,6 +7,6 @@ namespace Client.MVVM.Models
     {
         public required string UID { get; set; }
         public required string Username { get; set; }
-        public ReactiveCommand<Unit, Unit>? Command { get; set; }
+        public ReactiveCommand<string, Unit>? Command { get; set; }
     }
 }

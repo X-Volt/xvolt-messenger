@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
@@ -21,8 +22,10 @@ namespace Client.MVVM.ViewModels
         private string _loginUsername = "";
         private string _loginPassword = "";
         private string _loginError = "";
-        
+
+        private FlowDocument _chatPage = new FlowDocument();
         private bool _chatPageVisible = false;
+
         private bool _settingsPageVisible = false;
         private bool _newsPageVisible = false;
 
@@ -54,9 +57,16 @@ namespace Client.MVVM.ViewModels
         }
 
         public ObservableCollection<UserModel> ChatUsers { get; set; }
-        public ReactiveCommand<Unit, Unit> ChatUserViewMessages { get; set; }
+        public ReactiveCommand<string, Unit> ChatUserViewMessages { get; set; }
 
-        public FlowDocument ChatPage { get; set; }
+        public IDictionary<string, FlowDocument> ChatPages = new Dictionary<string, FlowDocument>();
+        
+        public FlowDocument ChatPage
+        {
+            get => _chatPage;
+            set => this.RaiseAndSetIfChanged(ref _chatPage, value);
+        }
+
         public bool ChatPageVisible
         {
             get => _chatPageVisible;
@@ -108,16 +118,23 @@ namespace Client.MVVM.ViewModels
             });
 
             ChatUsers = new ObservableCollection<UserModel>();
-            ChatUserViewMessages = ReactiveCommand.Create(() =>
+            ChatUserViewMessages = ReactiveCommand.Create<string>((username) =>
             {
                 NewsPageVisible = false;
-                SettingsPageVisible = true;
+                SettingsPageVisible = false;
+
+                if (ChatPages.ContainsKey(username))
+                {
+                    ChatPage = ChatPages[username];
+                }
+                else
+                {
+                    ChatPage = InitChatPage(username);
+                }
+                
                 ChatPageVisible = true;
             });
-
-            ChatPage = InitPage("Messages");
-            ChatPageVisible = false;
-
+            
             ChatMessage = new FlowDocument();
             ChatSend = ReactiveCommand.Create(() =>
             {
@@ -169,6 +186,14 @@ namespace Client.MVVM.ViewModels
             return page;
         }
 
+        private FlowDocument InitChatPage(string username)
+        {
+            var page = InitPage($"Message History for {username}");
+            ChatPages.Add(username, page);
+
+            return page;
+        }
+
         private void UserConnected()
         {
             if (_server.PacketReader != null)
@@ -192,8 +217,13 @@ namespace Client.MVVM.ViewModels
                             LoginVisible = false;
 
                             NewsPageVisible = false;
-                            SettingsPageVisible = true;
+                            SettingsPageVisible = false;
+
+                            ChatPage = InitPage("My Private Notes");
+                            ChatPages.Add(user.Username, ChatPage);
                             ChatPageVisible = true;
+
+                            ChatMessage.NewDocument();
                         }
                     });
                 }

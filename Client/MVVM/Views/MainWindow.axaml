@@ -18,7 +18,7 @@
         ColumnDefinitions="200,*">
 
         <Grid Grid.Column="0" Background="Black" 
-            RowDefinitions="*,*">
+            RowDefinitions="Auto,*">
 
             <Grid Grid.Row="0" Margin="10" 
                 RowDefinitions="Auto,*">
@@ -53,9 +53,9 @@
                 </StackPanel>
 
                 <Grid Grid.Row="1" IsVisible="{Binding !LoginVisible}" 
-                    ColumnDefinitions="*">
+                    RowDefinitions="*">
 
-                    <ListBox Grid.Column="0" ItemsSource="{Binding ChatUsers}" 
+                    <ListBox Grid.Row="0" ItemsSource="{Binding ChatUsers}" 
                         VerticalAlignment="Stretch" Background="White">
 
                         <ListBox.Styles>
@@ -72,7 +72,8 @@
                                         CornerRadius="0" Background="White" 
                                         HorizontalAlignment="Stretch" 
                                         HorizontalContentAlignment="Left" 
-                                        Command="{Binding Command}" />
+                                        Command="{Binding Command}" 
+                                        CommandParameter="{Binding Username}"/>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
