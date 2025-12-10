@@ -38,11 +38,12 @@ namespace Server
                     switch (opCode)
                     {
                         case 5:
+                            var username = _packetReader.ReadMessage();
                             var message = _packetReader.ReadMessage();
 
                             Console.WriteLine($"[{DateTime.Now}][{UID}]: Message Received: {message}");
 
-                            Program.BroadcastMessage(this, message);
+                            Program.SendMessageToUser(this, username, message);
 
                             break;
 

@@ -17,6 +17,7 @@ namespace Client.MVVM.ViewModels
     class MainWindowViewModel : ViewModelBase
     {
         private readonly Server _server;
+        private string _username = "";
 
         private bool _loginVisible = true;
         private string _loginUsername = "";
@@ -24,8 +25,9 @@ namespace Client.MVVM.ViewModels
         private string _loginError = "";
 
         private FlowDocument _chatPage = new FlowDocument();
-        private bool _chatPageVisible = false;
+        private string _chatPageKey = "";
 
+        private bool _chatPageVisible = false;
         private bool _settingsPageVisible = false;
         private bool _newsPageVisible = false;
 
@@ -59,7 +61,7 @@ namespace Client.MVVM.ViewModels
         public ObservableCollection<UserModel> ChatUsers { get; set; }
         public ReactiveCommand<string, Unit> ChatUserViewMessages { get; set; }
 
-        public IDictionary<string, FlowDocument> ChatPages = new Dictionary<string, FlowDocument>();
+        public IDictionary<string, string> ChatPages = new Dictionary<string, string>();
         
         public FlowDocument ChatPage
         {
@@ -96,6 +98,10 @@ namespace Client.MVVM.ViewModels
 
         public MainWindowViewModel()
         {
+            // TODO: move all commands to their own methods
+            // TODO: get the editor focus to work properly
+            // TODO: get the editor formatting to retain
+
             _server = new Server();
             _server.ConnectEvent += UserConnected;
             _server.DisconnectEvent += UserDisconnected;
@@ -123,15 +129,15 @@ namespace Client.MVVM.ViewModels
                 NewsPageVisible = false;
                 SettingsPageVisible = false;
 
-                if (ChatPages.ContainsKey(username))
+                string? pageXaml;
+
+                if (!ChatPages.TryGetValue(username, out pageXaml))
                 {
-                    ChatPage = ChatPages[username];
+                    pageXaml = InitChatPage(username);
                 }
-                else
-                {
-                    ChatPage = InitChatPage(username);
-                }
-                
+
+                _chatPageKey = username;
+                ChatPage.LoadXaml(pageXaml);
                 ChatPageVisible = true;
             });
             
@@ -139,7 +145,7 @@ namespace Client.MVVM.ViewModels
             ChatSend = ReactiveCommand.Create(() =>
             {
                 if (ChatMessage.Blocks.Count > 0) {
-                    _server.SendMessage(ChatMessage.SaveXaml());
+                    _server.SendMessageToUser(_chatPageKey, ChatMessage.SaveXaml());
 
                     ChatMessage.NewDocument();
                 }
@@ -186,12 +192,24 @@ namespace Client.MVVM.ViewModels
             return page;
         }
 
-        private FlowDocument InitChatPage(string username)
+        private string InitChatPage(string username)
         {
-            var page = InitPage($"Message History for {username}");
-            ChatPages.Add(username, page);
+            FlowDocument page;
+            
+            if (username == _username)
+            {
+                page = InitPage("My Private Notes");
+            }
+            else
+            {
+                page = InitPage($"Message History for {username}");
+            }
+                
+            var pageXaml = page.SaveXaml();
 
-            return page;
+            ChatPages.Add(username, pageXaml);
+
+            return pageXaml;
         }
 
         private void UserConnected()
@@ -213,14 +231,16 @@ namespace Client.MVVM.ViewModels
 
                         if (user.Username == LoginUsername)
                         {
+                            _username = user.Username;
+                            _chatPageKey = _username;
+
                             LoginUsername = "";
                             LoginVisible = false;
 
                             NewsPageVisible = false;
                             SettingsPageVisible = false;
 
-                            ChatPage = InitPage("My Private Notes");
-                            ChatPages.Add(user.Username, ChatPage);
+                            ChatPage.LoadXaml(InitChatPage(_username));
                             ChatPageVisible = true;
 
                             ChatMessage.NewDocument();
@@ -246,11 +266,26 @@ namespace Client.MVVM.ViewModels
                         ChatUsers.Remove(user);
                     }
 
-                    var messageParagraph = new Paragraph();
-                    var messageDisconnected = $"[{DateTime.Now}]: [{username}]: Disconnected";
-                    messageParagraph.Inlines.Add(new EditableRun(messageDisconnected));
+                    string? pageXaml;
 
-                    ChatPage.Blocks.Add(messageParagraph);
+                    if (ChatPages.TryGetValue(username, out pageXaml))
+                    {
+                        var pageToUpdate = new FlowDocument();
+                        pageToUpdate.LoadXaml(pageXaml);
+
+                        var messageParagraph = new Paragraph();
+                        var messageDisconnected = $"[{DateTime.Now}]: [{username}]: Disconnected";
+                        messageParagraph.Inlines.Add(new EditableRun(messageDisconnected));
+
+                        pageToUpdate.Blocks.Add(messageParagraph);
+
+                        ChatPages[username] = pageToUpdate.SaveXaml();
+
+                        if (username == _chatPageKey)
+                        {
+                            ChatPage.LoadXaml(ChatPages[username]);
+                        }
+                    }
                 });
             }
         }
@@ -260,23 +295,48 @@ namespace Client.MVVM.ViewModels
             if (_server.PacketReader != null)
             {
                 var uid = _server.PacketReader.ReadMessage();
-                var username = _server.PacketReader.ReadMessage();
+                var usernameFrom = _server.PacketReader.ReadMessage();
+                var usernameTo = _server.PacketReader.ReadMessage();
                 var message = _server.PacketReader.ReadMessage();
+
+                var usernamePage = usernameFrom;
+
+                if (usernameFrom == _username)
+                {
+                    usernamePage = usernameTo;
+                }
 
                 Dispatcher.UIThread.Invoke(() =>
                 {
+                    string? pageXaml;
+
+                    if (!ChatPages.TryGetValue(usernamePage, out pageXaml))
+                    {
+                        pageXaml = InitChatPage(usernamePage);
+                    }
+
+                    var pageToUpdate = new FlowDocument();
+                    pageToUpdate.LoadXaml(pageXaml);
+
                     var messageParagraph = new Paragraph();
-                    var messageTimestamp = $"[{DateTime.Now}]: [{username}]:";
+                    var messageTimestamp = $"[{DateTime.Now}]: [{usernameFrom}]:";
                     messageParagraph.Inlines.Add(new EditableRun(messageTimestamp));
 
-                    ChatPage.Blocks.Add(messageParagraph);
+                    pageToUpdate.Blocks.Add(messageParagraph);
 
                     var messageFlow = new FlowDocument();
                     messageFlow.LoadXaml(message);
 
                     foreach (var block in messageFlow.Blocks)
                     {
-                        ChatPage.Blocks.Add(block);
+                        pageToUpdate.Blocks.Add(block);
+                    }
+
+                    ChatPages[usernamePage] = pageToUpdate.SaveXaml();
+
+                    if (usernamePage == _chatPageKey)
+                    {
+                        ChatPage.LoadXaml(ChatPages[usernamePage]);
                     }
                 });
             }

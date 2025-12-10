@@ -71,10 +71,11 @@ namespace Client.Net
             }
         }
 
-        public void SendMessage(string message)
+        public void SendMessageToUser(string username, string message)
         {
             var messagePacket = new PacketBuilder();
             messagePacket.WriteOpCode(5);
+            messagePacket.WriteMessage(username);
             messagePacket.WriteMessage(message);
 
             _client.Client.Send(messagePacket.GetPacketBytes());

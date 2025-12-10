@@ -8,19 +8,20 @@ namespace MessengerServer
 {
     class Program
     {
-        static private List<Client> _users;
-        static private TcpListener _listener;
+        static private IDictionary<string, Client> _users;
+        static private TcpListener? _listener;
 
         static void Main(string[] args)
         {
-            _users = new List<Client>();
+            _users = new Dictionary<string, Client>();
 
             _listener = new TcpListener(IPAddress.Parse("127.0.0.1"), 7878);
             _listener.Start();
 
             while (true)
             {
-                _users.Add(new Client(_listener.AcceptTcpClient()));
+                var client = new Client(_listener.AcceptTcpClient());
+                _users.Add(client.Username, client);
 
                 Console.WriteLine("Client Connected");
 
@@ -28,53 +29,75 @@ namespace MessengerServer
             }
         }
 
-        static void BroadcastConnect()
+        public static void BroadcastConnect()
         {
+            // TODO: get this to only send to the user's active chat pages
+
             // send everyone the updated user list
-            foreach (var userTo in _users)
+            foreach (var userTo in _users.Values)
             {
                 // send each user's details
-                foreach (var user in _users)
+                foreach (var user in _users.Values)
                 {
-                    var broadcastPacket = new PacketBuilder();
-                    broadcastPacket.WriteOpCode(1);
-                    broadcastPacket.WriteMessage(user.UID.ToString());
-                    broadcastPacket.WriteMessage(user.Username);
+                    var packet = new PacketBuilder();
+                    packet.WriteOpCode(1);
+                    packet.WriteMessage(user.UID.ToString());
+                    packet.WriteMessage(user.Username);
 
-                    userTo.ClientSocket.Client.Send(broadcastPacket.GetPacketBytes());
+                    userTo.ClientSocket.Client.Send(packet.GetPacketBytes());
                 }
             }
         }
 
         public static void BroadcastDisconnect(Client userFrom)
         {
-            foreach (var userTo in _users)
+            // TODO: get this to only send to the user's active chat pages
+
+            foreach (var userTo in _users.Values)
             {
                 if (userTo.UID != userFrom.UID)
                 {
-                    var broadcastPacket = new PacketBuilder();
-                    broadcastPacket.WriteOpCode(10);
-                    broadcastPacket.WriteMessage(userFrom.UID.ToString());
-                    broadcastPacket.WriteMessage(userFrom.Username);
+                    var packet = new PacketBuilder();
+                    packet.WriteOpCode(10);
+                    packet.WriteMessage(userFrom.UID.ToString());
+                    packet.WriteMessage(userFrom.Username);
 
-                    userTo.ClientSocket.Client.Send(broadcastPacket.GetPacketBytes());
+                    userTo.ClientSocket.Client.Send(packet.GetPacketBytes());
                 }
             }
 
-            _users.Remove(userFrom);
+            _users.Remove(userFrom.Username);
         }
 
-        public static void BroadcastMessage(Client userFrom, string message)
+        public static void SendMessageToUser(Client userFrom, string usernameTo, string message)
         {
-            foreach (var userTo in _users)
+            // Add support for offline messaging ...
+            // - store the date in the message, on the server side, so we know when it was sent
+            // - send the message right away when the recipient is online (no server storage)
+            // - when they are not online, check if they are a registered user ...
+            // - if not, then ignore, otherwise store the message temporarily on the server
+            // - when the user connects, send them their offline messages and clear the storage
+            
+            foreach (var userTo in _users.Values)
             {
-                var broadcastPacket = new PacketBuilder();
-                broadcastPacket.WriteOpCode(5);
-                broadcastPacket.WriteMessage(userFrom.UID.ToString());
-                broadcastPacket.WriteMessage(userFrom.Username);
-                broadcastPacket.WriteMessage(message);
+                if (userTo.Username == usernameTo)
+                {
+                    var packet = new PacketBuilder();
+                    packet.WriteOpCode(5);
+                    packet.WriteMessage(userFrom.UID.ToString());
+                    packet.WriteMessage(userFrom.Username);
+                    packet.WriteMessage(userTo.Username);
+                    packet.WriteMessage(message);
 
-                userTo.ClientSocket.Client.Send(broadcastPacket.GetPacketBytes());
+                    if (userFrom.UID != userTo.UID)
+                    {
+                        userFrom.ClientSocket.Client.Send(packet.GetPacketBytes());
+                    }
+                    
+                    userTo.ClientSocket.Client.Send(packet.GetPacketBytes());
+
+                    break;
+                }
             }
         }
     }
