@@ -1,7 +1,6 @@
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Client.MVVM.ViewModels;
@@ -25,7 +24,8 @@ namespace Client
                 DisableAvaloniaDataAnnotationValidation();
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(),
+                    // this was moved to MainWindow.axaml.cs
+                    // DataContext = new MainWindowViewModel(),
                 };
             }
 

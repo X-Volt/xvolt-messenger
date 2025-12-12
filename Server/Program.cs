@@ -8,13 +8,11 @@ namespace MessengerServer
 {
     class Program
     {
-        static private IDictionary<string, Client> _users;
+        static private IDictionary<string, Client> _users = new Dictionary<string, Client>();
         static private TcpListener? _listener;
 
         static void Main(string[] args)
         {
-            _users = new Dictionary<string, Client>();
-
             _listener = new TcpListener(IPAddress.Parse("127.0.0.1"), 7878);
             _listener.Start();
 

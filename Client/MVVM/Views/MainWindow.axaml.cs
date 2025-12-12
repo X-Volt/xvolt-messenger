@@ -1,16 +1,27 @@
 using Avalonia.Controls;
+using AvRichTextBox;
 
 using Client.MVVM.ViewModels;
 
 namespace Client.MVVM.Views
 {
-    public partial class MainWindow : Window
+    public interface IView
+    {
+        RichTextBox GetChatMessageRTB();
+    }
+
+    public partial class MainWindow : Window, IView
     {
         public MainWindow()
         {
-            InitializeComponent();
+            DataContext = new MainWindowViewModel(this);
 
-            DataContext = new MainWindowViewModel();
+            InitializeComponent();
+        }
+
+        public RichTextBox GetChatMessageRTB()
+        {
+            return ChatMessageRTB;
         }
     }
 }

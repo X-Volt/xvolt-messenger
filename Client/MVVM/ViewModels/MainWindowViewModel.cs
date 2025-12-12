@@ -10,12 +10,15 @@ using AvRichTextBox;
 using ReactiveUI;
 
 using Client.MVVM.Models;
+using Client.MVVM.Views;
 using Client.Net;
 
 namespace Client.MVVM.ViewModels
 {
     class MainWindowViewModel : ViewModelBase
     {
+        private readonly IView _view;
+
         private readonly Server _server;
         private string _username = "";
 
@@ -96,11 +99,16 @@ namespace Client.MVVM.ViewModels
 
         public ReactiveCommand<Unit, Unit> Artwork { get; set; }
 
-        public MainWindowViewModel()
+        // a parameterless constructor is required for the Avalonia previewer to work
+        public MainWindowViewModel() { }
+
+        public MainWindowViewModel(IView view)
         {
             // TODO: move all commands to their own methods
-            // TODO: get the editor focus to work properly
             // TODO: get the editor formatting to retain
+            // TODO: add WYSIWYG editor buttons
+
+            _view = view;
 
             _server = new Server();
             _server.ConnectEvent += UserConnected;
@@ -148,6 +156,8 @@ namespace Client.MVVM.ViewModels
                     _server.SendMessageToUser(_chatPageKey, ChatMessage.SaveXaml());
 
                     ChatMessage.NewDocument();
+
+                    _view.GetChatMessageRTB().ScrollToSelection();
                 }
             });
 
@@ -244,6 +254,8 @@ namespace Client.MVVM.ViewModels
                             ChatPageVisible = true;
 
                             ChatMessage.NewDocument();
+
+                            _view.GetChatMessageRTB().ScrollToSelection();
                         }
                     });
                 }

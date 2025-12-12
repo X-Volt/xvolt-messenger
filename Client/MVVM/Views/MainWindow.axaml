@@ -118,7 +118,7 @@
                 RowDefinitions="80">
                 
                 <avrtb:RichTextBox Grid.Column="0" Margin="0,0,10,0" IsReadOnly="False" 
-                    FlowDocument="{Binding ChatMessage, UpdateSourceTrigger=PropertyChanged}" />
+                    Name="ChatMessageRTB" FlowDocument="{Binding ChatMessage, UpdateSourceTrigger=PropertyChanged}" />
                 
                 <Button Grid.Column="1" Content="Send" 
                     Background="LightGray" 
