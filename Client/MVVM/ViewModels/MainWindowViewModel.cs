@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 using Avalonia.Input;
 using Avalonia.Threading;
@@ -160,11 +161,7 @@ namespace Client.MVVM.ViewModels
                     _server.SendMessageToUser(_chatPageKey, ChatMessage.SaveXaml());
 
                     ChatMessage.NewDocument();
-
-                    // set the focus by double clicking the control
-                    // TODO: look into running this after the RichTextBox has initialized
-                    _view.GetRichTextBox("ChatMessageRTB").Focus(NavigationMethod.Pointer);
-                    _view.GetRichTextBox("ChatMessageRTB").Focus(NavigationMethod.Pointer);
+                    ChatMessageFocus();
                 }
             });
 
@@ -239,6 +236,17 @@ namespace Client.MVVM.ViewModels
             return pageXaml;
         }
 
+        async internal void ChatMessageFocus()
+        {
+            // wait until the RichTextBox has initialized
+            // it must be longer than 70ms
+            await Task.Delay(100);
+
+            // set the focus by double clicking the control
+            _view.GetRichTextBox("ChatMessageRTB").Focus(NavigationMethod.Pointer);
+            _view.GetRichTextBox("ChatMessageRTB").Focus(NavigationMethod.Pointer);
+        }
+
         private void UserConnected()
         {
             if (_server.PacketReader != null)
@@ -271,11 +279,7 @@ namespace Client.MVVM.ViewModels
                             ChatPageVisible = true;
 
                             ChatMessage.NewDocument();
-
-                            // set the focus by double clicking the control
-                            // TODO: look into running this after the RichTextBox has initialized
-                            _view.GetRichTextBox("ChatMessageRTB").Focus(NavigationMethod.Pointer);
-                            _view.GetRichTextBox("ChatMessageRTB").Focus(NavigationMethod.Pointer);
+                            ChatMessageFocus();
                         }
                     });
                 }
