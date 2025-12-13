@@ -28,11 +28,11 @@
                 <StackPanel Grid.Row="1" IsVisible="{Binding LoginVisible}">
                     <Label Content="Screen Name" Foreground="White" Margin="0,10,0,0" />
 
-                    <TextBox Text="{Binding LoginUsername, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Name="LoginUsernameTB" Text="{Binding LoginUsername, UpdateSourceTrigger=PropertyChanged}" />
             
                     <Label Content="Password" Foreground="White" Margin="0,10,0,0" />
                 
-                    <TextBox Text="{Binding LoginPassword, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Name="LoginPasswordTB" Text="{Binding LoginPassword, UpdateSourceTrigger=PropertyChanged}" PasswordChar="*" />
 
                     <HyperlinkButton Content="Forgot Password" Margin="0,5,0,0" />
 
@@ -104,13 +104,13 @@
             RowDefinitions="*,100">
 
             <avrtb:RichTextBox Grid.Column="0" Grid.Row="0" BorderThickness="0" IsReadOnly="True" 
-                FlowDocument="{Binding SettingsPage}" IsVisible="{Binding SettingsPageVisible}" />
+                Name="SettingsPageRTB" FlowDocument="{Binding SettingsPage}" IsVisible="{Binding SettingsPageVisible}" />
 
             <avrtb:RichTextBox Grid.Column="0" Grid.Row="0" BorderThickness="0" IsReadOnly="True" 
-                FlowDocument="{Binding NewsPage}" IsVisible="{Binding NewsPageVisible}" />
+                Name="NewsPageRTB" FlowDocument="{Binding NewsPage}" IsVisible="{Binding NewsPageVisible}" />
 
             <avrtb:RichTextBox Grid.Column="0" Grid.Row="0" BorderThickness="0" IsReadOnly="True" 
-                FlowDocument="{Binding ChatPage}" IsVisible="{Binding ChatPageVisible}" />
+                Name="ChatPageRTB" FlowDocument="{Binding ChatPage}" IsVisible="{Binding ChatPageVisible}" />
 
             <Grid Grid.Column="0" Grid.Row="1" Margin="10" 
                 VerticalAlignment="Center" IsVisible="{Binding ChatPageVisible}"

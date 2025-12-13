@@ -54,12 +54,6 @@ public partial class RichTextBox : UserControl
 
       InitializeBlinkAnimation();
 
-      blinkAnimation!.RunAsync(_CaretRect);
-      _CaretRect.Bind(IsVisibleProperty, new Binding("CaretVisible"));
-      _CaretRect.Bind(MarginProperty, new Binding("CaretMargin"));
-      _CaretRect.Bind(HeightProperty, new Binding("CaretHeight"));
-      _CaretRect.DataContext = rtbVM;
-
       this.TextInput += RichTextBox_TextInput;
 
       this.Focusable = true;
@@ -88,8 +82,12 @@ public partial class RichTextBox : UserControl
       }
 
       FlowDoc.ShowDebugger = rtbVM.RunDebuggerVisible;
-
-      this.Focus();
+      
+      if (FlowDoc.IsEditable)
+      {
+         CaretEnable();
+         // this.Focus();
+      }
 
       //FlowDoc.NewDocument();
 
@@ -154,9 +152,8 @@ public partial class RichTextBox : UserControl
       this.TextInputMethodClientRequested += RichTextBox_TextInputMethodClientRequested;
 
       client = new RichTextBoxTextInputClient(this);
-      //Debug.WriteLine("created new client)");
 
-      this.Focus();
+      // this.Focus();
 
    }
 
@@ -290,7 +287,7 @@ public partial class RichTextBox : UserControl
                FlowDoc.MovePageSelection(-1, extend, 0);
             }
 
-            this.Focus();
+            // this.Focus();
          }
       }
       else
@@ -332,9 +329,20 @@ public partial class RichTextBox : UserControl
    private void ScrollViewer_ScrollChanged(object? sender, Avalonia.Controls.ScrollChangedEventArgs e)
    {
       rtbVM.RTBScrollOffset = FlowDocSV.Offset;
-
    }
 
+   public void CaretEnable()
+   {
+      blinkAnimation!.RunAsync(_CaretRect);
+      _CaretRect.Bind(IsVisibleProperty, new Binding("CaretVisible"));
+      _CaretRect.Bind(MarginProperty, new Binding("CaretMargin"));
+      _CaretRect.Bind(HeightProperty, new Binding("CaretHeight"));
+      _CaretRect.DataContext = rtbVM;
+   }
 
+   public void CaretDisable()
+   {
+      // TODO: cancel the RunAsync animation
+   }
 }
 

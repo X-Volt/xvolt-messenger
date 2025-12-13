@@ -1,4 +1,6 @@
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using AvRichTextBox;
 
 using Client.MVVM.ViewModels;
@@ -7,7 +9,8 @@ namespace Client.MVVM.Views
 {
     public interface IView
     {
-        RichTextBox GetChatMessageRTB();
+        TextBox GetTextBox(string name);
+        RichTextBox GetRichTextBox(string name);
     }
 
     public partial class MainWindow : Window, IView
@@ -19,9 +22,22 @@ namespace Client.MVVM.Views
             InitializeComponent();
         }
 
-        public RichTextBox GetChatMessageRTB()
+        protected override void OnLoaded(RoutedEventArgs e)
         {
-            return ChatMessageRTB;
+            base.OnLoaded(e);
+
+            LoginUsernameTB.Focus(NavigationMethod.Pointer);
+            LoginUsernameTB.Focus(NavigationMethod.Pointer);
+        }
+
+        public TextBox GetTextBox(string name)
+        {
+            return this.GetControl<TextBox>(name);
+        }
+
+        public RichTextBox GetRichTextBox(string name)
+        {
+            return this.GetControl<RichTextBox>(name);
         }
     }
 }

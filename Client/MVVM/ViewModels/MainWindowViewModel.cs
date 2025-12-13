@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 
+using Avalonia.Input;
 using Avalonia.Threading;
 using AvRichTextBox;
 using ReactiveUI;
@@ -27,7 +28,7 @@ namespace Client.MVVM.ViewModels
         private string _loginPassword = "";
         private string _loginError = "";
 
-        private FlowDocument _chatPage = new FlowDocument();
+        private FlowDocument _chatPage;
         private string _chatPageKey = "";
 
         private bool _chatPageVisible = false;
@@ -99,13 +100,14 @@ namespace Client.MVVM.ViewModels
 
         public ReactiveCommand<Unit, Unit> Artwork { get; set; }
 
-        // a parameterless constructor is required for the Avalonia previewer to work
+        // a parameterless constructor is required
+        // for the Avalonia XAML previewer to work
+        #pragma warning disable CS8618
         public MainWindowViewModel() { }
 
         public MainWindowViewModel(IView view)
         {
             // TODO: move all commands to their own methods
-            // TODO: get the editor formatting to retain
             // TODO: add WYSIWYG editor buttons
 
             _view = view;
@@ -114,6 +116,8 @@ namespace Client.MVVM.ViewModels
             _server.ConnectEvent += UserConnected;
             _server.DisconnectEvent += UserDisconnected;
             _server.MessageReceivedEvent += MessageReceived;
+
+            _chatPage = InitPage();
 
             LoginRegister = ReactiveCommand.Create(() => {});
 
@@ -157,7 +161,10 @@ namespace Client.MVVM.ViewModels
 
                     ChatMessage.NewDocument();
 
-                    _view.GetChatMessageRTB().ScrollToSelection();
+                    // set the focus by double clicking the control
+                    // TODO: look into running this after the RichTextBox has initialized
+                    _view.GetRichTextBox("ChatMessageRTB").Focus(NavigationMethod.Pointer);
+                    _view.GetRichTextBox("ChatMessageRTB").Focus(NavigationMethod.Pointer);
                 }
             });
 
@@ -182,7 +189,7 @@ namespace Client.MVVM.ViewModels
             Artwork = ReactiveCommand.Create(() => {});
         }
 
-        static private FlowDocument InitPage(string title)
+        static private FlowDocument InitPage(string title = "")
         {
             var page = new FlowDocument();
             page.IsEditable = false;
@@ -190,14 +197,24 @@ namespace Client.MVVM.ViewModels
 
             // padding must be applied after it is cleared
             page.PagePadding = new(10, 0, 0, 10);
-            
-            // heading
-            var pagePar = new Paragraph();
-            pagePar.FontSize = 20;
-            pagePar.FontWeight = Avalonia.Media.FontWeight.Bold;
-            pagePar.Inlines.Add(new EditableRun(title));
 
-            page.Blocks.Add(pagePar);
+            if (!String.IsNullOrEmpty(title))
+            {
+                // heading
+                var pageRun = new EditableRun(title);
+                pageRun.FontSize = 20;
+                pageRun.FontWeight = Avalonia.Media.FontWeight.Bold;
+
+                var pagePar = new Paragraph();
+                pagePar.Inlines.Add(pageRun);
+
+                page.Blocks.Add(pagePar);
+                page.Blocks.Add(new Paragraph());
+            }
+            else
+            {
+                page.Blocks.Add(new Paragraph());
+            }
 
             return page;
         }
@@ -255,7 +272,10 @@ namespace Client.MVVM.ViewModels
 
                             ChatMessage.NewDocument();
 
-                            _view.GetChatMessageRTB().ScrollToSelection();
+                            // set the focus by double clicking the control
+                            // TODO: look into running this after the RichTextBox has initialized
+                            _view.GetRichTextBox("ChatMessageRTB").Focus(NavigationMethod.Pointer);
+                            _view.GetRichTextBox("ChatMessageRTB").Focus(NavigationMethod.Pointer);
                         }
                     });
                 }
@@ -282,7 +302,7 @@ namespace Client.MVVM.ViewModels
 
                     if (ChatPages.TryGetValue(username, out pageXaml))
                     {
-                        var pageToUpdate = new FlowDocument();
+                        var pageToUpdate = InitPage();
                         pageToUpdate.LoadXaml(pageXaml);
 
                         var messageParagraph = new Paragraph();
@@ -327,7 +347,7 @@ namespace Client.MVVM.ViewModels
                         pageXaml = InitChatPage(usernamePage);
                     }
 
-                    var pageToUpdate = new FlowDocument();
+                    var pageToUpdate = InitPage();
                     pageToUpdate.LoadXaml(pageXaml);
 
                     var messageParagraph = new Paragraph();
@@ -336,7 +356,7 @@ namespace Client.MVVM.ViewModels
 
                     pageToUpdate.Blocks.Add(messageParagraph);
 
-                    var messageFlow = new FlowDocument();
+                    var messageFlow = InitPage();
                     messageFlow.LoadXaml(message);
 
                     foreach (var block in messageFlow.Blocks)
