@@ -25,7 +25,7 @@ public partial class RichTextBox
                break;
 
             case Key.U:
-               ToggleUnderlining();
+               ToggleUnderline();
                break;
 
             case Key.C:

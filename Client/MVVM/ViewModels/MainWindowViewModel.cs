@@ -14,6 +14,7 @@ using ReactiveUI;
 using Client.MVVM.Models;
 using Client.MVVM.Views;
 using Client.Net;
+using Avalonia.Controls;
 
 namespace Client.MVVM.ViewModels
 {
@@ -80,6 +81,12 @@ namespace Client.MVVM.ViewModels
             set => this.RaiseAndSetIfChanged(ref _chatPageVisible, value);
         }
 
+        public ReactiveCommand<Unit, Unit> ChatMessageForeground { get; set; }
+        public ReactiveCommand<Unit, Unit> ChatMessageBackground { get; set; }
+        public ReactiveCommand<Unit, Unit> ChatMessageBold { get; set; }
+        public ReactiveCommand<Unit, Unit> ChatMessageItalic { get; set; }
+        public ReactiveCommand<Unit, Unit> ChatMessageUnderline { get; set; }
+
         public FlowDocument ChatMessage { get; set; }
         public ReactiveCommand<Unit, Unit> ChatSend { get; set; }
 
@@ -109,7 +116,6 @@ namespace Client.MVVM.ViewModels
         public MainWindowViewModel(IView view)
         {
             // TODO: move all commands to their own methods
-            // TODO: add WYSIWYG editor buttons
 
             _view = view;
 
@@ -153,7 +159,32 @@ namespace Client.MVVM.ViewModels
                 ChatPage.LoadXaml(pageXaml);
                 ChatPageVisible = true;
             });
+
+            ChatMessageForeground = ReactiveCommand.Create(() =>
+            {
+                ChatMessage.ToggleForeground();
+            });
             
+            ChatMessageBackground = ReactiveCommand.Create(() =>
+            {
+                ChatMessage.ToggleBackground();
+            });
+
+            ChatMessageBold = ReactiveCommand.Create(() =>
+            {
+                ChatMessage.ToggleBold();
+            });
+
+            ChatMessageItalic = ReactiveCommand.Create(() =>
+            {
+                ChatMessage.ToggleItalic();
+            });
+
+            ChatMessageUnderline = ReactiveCommand.Create(() =>
+            {
+                ChatMessage.ToggleUnderline();
+            });
+
             ChatMessage = new FlowDocument();
             ChatSend = ReactiveCommand.Create(() =>
             {

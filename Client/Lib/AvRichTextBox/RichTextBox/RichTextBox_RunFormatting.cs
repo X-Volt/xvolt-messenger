@@ -28,10 +28,10 @@ public partial class RichTextBox
 
    }
 
-   private void ToggleUnderlining()
+   private void ToggleUnderline()
    {
       if (IsReadOnly) return;
-      FlowDoc.ToggleUnderlining();
+      FlowDoc.ToggleUnderline();
 
    }
 
