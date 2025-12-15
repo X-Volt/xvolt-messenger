@@ -101,7 +101,7 @@
 
         <Grid Grid.Column="1" Margin="0" 
             ColumnDefinitions="*"
-            RowDefinitions="*,30,100">
+            RowDefinitions="*,Auto,100">
 
             <avrtb:RichTextBox Grid.Column="0" Grid.Row="0" BorderThickness="0" IsReadOnly="True" 
                 Name="SettingsPageRTB" FlowDocument="{Binding SettingsPage}" IsVisible="{Binding SettingsPageVisible}" />

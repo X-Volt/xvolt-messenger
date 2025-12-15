@@ -164,7 +164,7 @@ public partial class FlowDocument
          {
             IEditable nextInline = Selection.StartParagraph.Inlines[Selection.StartParagraph.Inlines.IndexOf(startInline) + 1];
             bool nextRunBackground = nextInline.GetType() == typeof(EditableRun) && ((EditableRun)nextInline).Background == new SolidColorBrush(Colors.CornflowerBlue);
-            InsertRunMode = (ForegroundOn != nextRunBackground);
+            InsertRunMode = (BackgroundOn != nextRunBackground);
             Selection.BiasForwardStart = !InsertRunMode;
          }
       }

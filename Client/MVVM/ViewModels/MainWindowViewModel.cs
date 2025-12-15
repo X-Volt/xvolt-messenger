@@ -87,7 +87,7 @@ namespace Client.MVVM.ViewModels
         public ReactiveCommand<Unit, Unit> ChatMessageItalic { get; set; }
         public ReactiveCommand<Unit, Unit> ChatMessageUnderline { get; set; }
 
-        public FlowDocument ChatMessage { get; set; }
+        public FlowDocument ChatMessage = new FlowDocument();
         public ReactiveCommand<Unit, Unit> ChatSend { get; set; }
 
         public ReactiveCommand<Unit, Unit> Settings { get; set; }
@@ -116,6 +116,7 @@ namespace Client.MVVM.ViewModels
         public MainWindowViewModel(IView view)
         {
             // TODO: move all commands to their own methods
+            // TODO: fix the fore/background buttons
 
             _view = view;
 
@@ -184,8 +185,7 @@ namespace Client.MVVM.ViewModels
             {
                 ChatMessage.ToggleUnderline();
             });
-
-            ChatMessage = new FlowDocument();
+            
             ChatSend = ReactiveCommand.Create(() =>
             {
                 if (ChatMessage.Blocks.Count > 0) {
