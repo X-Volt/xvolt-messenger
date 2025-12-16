@@ -14,7 +14,6 @@ using ReactiveUI;
 using Client.MVVM.Models;
 using Client.MVVM.Views;
 using Client.Net;
-using Avalonia.Controls;
 
 namespace Client.MVVM.ViewModels
 {
@@ -32,6 +31,7 @@ namespace Client.MVVM.ViewModels
 
         private FlowDocument _chatPage;
         private string _chatPageKey = "";
+        private FlowDocument _chatMessage;
 
         private bool _chatPageVisible = false;
         private bool _settingsPageVisible = false;
@@ -81,13 +81,17 @@ namespace Client.MVVM.ViewModels
             set => this.RaiseAndSetIfChanged(ref _chatPageVisible, value);
         }
 
+        public FlowDocument ChatMessage
+        {
+            get => _chatMessage;
+            set => this.RaiseAndSetIfChanged(ref _chatMessage, value);
+        }
+
         public ReactiveCommand<Unit, Unit> ChatMessageForeground { get; set; }
         public ReactiveCommand<Unit, Unit> ChatMessageBackground { get; set; }
         public ReactiveCommand<Unit, Unit> ChatMessageBold { get; set; }
         public ReactiveCommand<Unit, Unit> ChatMessageItalic { get; set; }
         public ReactiveCommand<Unit, Unit> ChatMessageUnderline { get; set; }
-
-        public FlowDocument ChatMessage = new FlowDocument();
         public ReactiveCommand<Unit, Unit> ChatSend { get; set; }
 
         public ReactiveCommand<Unit, Unit> Settings { get; set; }
@@ -160,6 +164,8 @@ namespace Client.MVVM.ViewModels
                 ChatPage.LoadXaml(pageXaml);
                 ChatPageVisible = true;
             });
+
+            ChatMessage = new FlowDocument();
 
             ChatMessageForeground = ReactiveCommand.Create(() =>
             {
@@ -271,7 +277,7 @@ namespace Client.MVVM.ViewModels
         {
             // wait until the RichTextBox has initialized
             // it must be longer than 70ms
-            await Task.Delay(100);
+            await Task.Delay(150);
 
             // set the focus by double clicking the control
             _view.GetRichTextBox("ChatMessageRTB").Focus(NavigationMethod.Pointer);
