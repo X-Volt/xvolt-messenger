@@ -287,8 +287,12 @@ public partial class FlowDocument
       if (background.GetType() != typeof(SolidColorBrush))
          throw new Exception("Background must be set with a SolidColorBrush");
 
+      var colorDefault = new SolidColorBrush(Colors.Transparent).Color;
+      var colorNew = ((SolidColorBrush)background).Color;
+      Color applyBackground = (ieds.Where(ar => ar.GetType() == typeof(EditableRun) && (((EditableRun)ar).Background == null || ((SolidColorBrush)((EditableRun)ar).Background).Color == colorDefault)).Count() == 0) ? colorDefault : colorNew;
+
       foreach (IEditable ied in ieds)
-         if (ied.GetType() == typeof(EditableRun)) { ((EditableRun)ied).Background = (SolidColorBrush)background; }
+         if (ied.GetType() == typeof(EditableRun)) { ((EditableRun)ied).Background = new SolidColorBrush(applyBackground); }
    }
 
    private void ApplyForegroundRuns(List<IEditable> ieds, object foreground)
@@ -296,8 +300,12 @@ public partial class FlowDocument
       if (foreground.GetType() != typeof(SolidColorBrush))
          throw new Exception("Foreground must be set with a SolidColorBrush");
 
+      var colorDefault = new SolidColorBrush(Colors.Black).Color;
+      var colorNew = ((SolidColorBrush)foreground).Color;
+      Color applyForeground = (ieds.Where(ar => ar.GetType() == typeof(EditableRun) && (((EditableRun)ar).Foreground == null || ((SolidColorBrush)((EditableRun)ar).Foreground).Color == colorDefault)).Count() == 0) ? colorDefault : colorNew;
+
       foreach (IEditable ied in ieds)
-         if (ied.GetType() == typeof(EditableRun)) { ((EditableRun)ied).Foreground = (SolidColorBrush)foreground; }
+         if (ied.GetType() == typeof(EditableRun)) { ((EditableRun)ied).Foreground = new SolidColorBrush(applyForeground); }
    }
 
    private void ApplyFontStretchRuns(List<IEditable> ieds, object fontstretch)
