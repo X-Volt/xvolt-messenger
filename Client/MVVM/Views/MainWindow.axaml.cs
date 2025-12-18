@@ -9,8 +9,9 @@ namespace Client.MVVM.Views
 {
     public interface IView
     {
-        TextBox GetTextBox(string name);
+        Button GetButton(string name);
         RichTextBox GetRichTextBox(string name);
+        TextBox GetTextBox(string name);
     }
 
     public partial class MainWindow : Window, IView
@@ -30,14 +31,19 @@ namespace Client.MVVM.Views
             LoginUsernameTB.Focus(NavigationMethod.Pointer);
         }
 
+        public RichTextBox GetRichTextBox(string name)
+        {
+            return this.GetControl<RichTextBox>(name);
+        }
+
         public TextBox GetTextBox(string name)
         {
             return this.GetControl<TextBox>(name);
         }
 
-        public RichTextBox GetRichTextBox(string name)
+        public Button GetButton(string name)
         {
-            return this.GetControl<RichTextBox>(name);
+            return this.GetControl<Button>(name);
         }
     }
 }

@@ -5,23 +5,43 @@
         <Border Padding="20" />
     </Design.PreviewWith>
 
-    <Style Selector="Button">
-        <Setter Property="Background" Value="White" />
-        <Setter Property="TextBlock.Foreground" Value="Black" />
-    </Style>
-
-    <Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="Gray" />
-        <Setter Property="TextBlock.Foreground" Value="Black" />
-    </Style>
-
-    <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Style Selector="#AppMenu > Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
         <Setter Property="Background" Value="Red" />
         <Setter Property="TextBlock.Foreground" Value="White" />
     </Style>
 
-    <Style Selector="Button#User:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Style Selector="#LoginForm > Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.Foreground" Value="Black" />
+    </Style>
+
+    <Style Selector="#LoginForm > Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="Gray" />
+        <Setter Property="TextBlock.Foreground" Value="Black" />
+    </Style>
+
+    <Style Selector="#LoginForm > Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="Red" />
+        <Setter Property="TextBlock.Foreground" Value="White" />
+    </Style>
+
+    <Style Selector="#UsersList > Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
         <Setter Property="Background" Value="LightGray" />
         <Setter Property="TextBlock.Foreground" Value="Black" />
+    </Style>
+
+    <Style Selector="#ForegroundColors > Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="Black" />
+    </Style>
+
+    <Style Selector="#BackgroundColors > Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="Black" />
+    </Style>
+
+    <Style Selector="#ChatSend:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="Red" />
+        <Setter Property="TextBlock.Foreground" Value="White" />
     </Style>
 </Styles>

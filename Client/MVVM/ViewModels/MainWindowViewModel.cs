@@ -87,8 +87,8 @@ namespace Client.MVVM.ViewModels
             set => this.RaiseAndSetIfChanged(ref _chatMessage, value);
         }
 
-        public ReactiveCommand<Unit, Unit> ChatMessageForeground { get; set; }
-        public ReactiveCommand<Unit, Unit> ChatMessageBackground { get; set; }
+        public ReactiveCommand<string, Unit> ChatMessageForeground { get; set; }
+        public ReactiveCommand<string, Unit> ChatMessageBackground { get; set; }
         public ReactiveCommand<Unit, Unit> ChatMessageBold { get; set; }
         public ReactiveCommand<Unit, Unit> ChatMessageItalic { get; set; }
         public ReactiveCommand<Unit, Unit> ChatMessageUnderline { get; set; }
@@ -120,7 +120,6 @@ namespace Client.MVVM.ViewModels
         public MainWindowViewModel(IView view)
         {
             // TODO: move all commands to their own methods
-            // TODO: fix the fore/background buttons
 
             _view = view;
 
@@ -167,14 +166,18 @@ namespace Client.MVVM.ViewModels
 
             ChatMessage = new FlowDocument();
 
-            ChatMessageForeground = ReactiveCommand.Create(() =>
+            ChatMessageForeground = ReactiveCommand.Create((string color) =>
             {
-                ChatMessage.ToggleForeground();
+                ChatMessage.ApplyForeground(color);
+                _view.GetButton("ChatMessageForegroundBTN").Flyout.Hide();
+                ChatMessageFocus();
             });
             
-            ChatMessageBackground = ReactiveCommand.Create(() =>
+            ChatMessageBackground = ReactiveCommand.Create((string color) =>
             {
-                ChatMessage.ToggleBackground();
+                ChatMessage.ApplyBackground(color);
+                _view.GetButton("ChatMessageBackgroundBTN").Flyout.Hide();
+                ChatMessageFocus();
             });
 
             ChatMessageBold = ReactiveCommand.Create(() =>

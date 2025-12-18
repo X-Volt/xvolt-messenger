@@ -49,8 +49,6 @@ public partial class FlowDocument
    bool BoldOn = false;
    bool ItalicOn = false;
    bool UnderlineOn = false;
-   bool ForegroundOn = false;
-   bool BackgroundOn = false;
 
    private bool InsertRunMode = false;
    private ToggleFormatRun? toggleFormatRun;
@@ -59,8 +57,6 @@ public partial class FlowDocument
    private void ToggleApplyBold(IEditable ied) { if (ied.GetType() == typeof(EditableRun)) { ((EditableRun)ied).FontWeight = BoldOn ? FontWeight.Bold : FontWeight.Normal; } }
    private void ToggleApplyItalic(IEditable ied) { if (ied.GetType() == typeof(EditableRun)) { ((EditableRun)ied).FontStyle = ItalicOn ? FontStyle.Italic : FontStyle.Normal; } }
    private void ToggleApplyUnderline(IEditable ied) { if (ied.GetType() == typeof(EditableRun)) { ((EditableRun)ied).TextDecorations = UnderlineOn ? TextDecorations.Underline : null; } }
-   private void ToggleApplyForeground(IEditable ied) { if (ied.GetType() == typeof(EditableRun)) { ((EditableRun)ied).Foreground = ForegroundOn ? new SolidColorBrush(Colors.CornflowerBlue) : new SolidColorBrush(Colors.Black); } }
-   private void ToggleApplyBackground(IEditable ied) { if (ied.GetType() == typeof(EditableRun)) { ((EditableRun)ied).Background = BackgroundOn ? new SolidColorBrush(Colors.CornflowerBlue) : new SolidColorBrush(Colors.Transparent); } }
 
    internal void ToggleItalic()
    {
@@ -128,48 +124,14 @@ public partial class FlowDocument
          Selection.ApplyFormatting(Inline.TextDecorationsProperty, TextDecorations.Underline);
    }
 
-   internal void ToggleForeground()
+   internal void ApplyForeground(string color)
    {
-      if (Selection.Length == 0)
-      {
-         toggleFormatRun = ToggleApplyForeground;
-         ForegroundOn = !ForegroundOn;
-         InsertRunMode = true;
-
-         IEditable startInline = Selection.GetStartInline();
-
-         if (startInline != Selection.StartParagraph.Inlines.Last() && startInline.GetCharPosInInline(Selection.Start) == startInline.InlineText.Length)
-         {
-            IEditable nextInline = Selection.StartParagraph.Inlines[Selection.StartParagraph.Inlines.IndexOf(startInline) + 1];
-            bool nextRunForeground = nextInline.GetType() == typeof(EditableRun) && ((EditableRun)nextInline).Foreground == new SolidColorBrush(Colors.CornflowerBlue);
-            InsertRunMode = (ForegroundOn != nextRunForeground);
-            Selection.BiasForwardStart = !InsertRunMode;
-         }
-      }
-      else
-         Selection.ApplyFormatting(Inline.ForegroundProperty, new SolidColorBrush(Colors.CornflowerBlue));
+      Selection.ApplyFormatting(Inline.ForegroundProperty, new SolidColorBrush(Color.Parse(color)));
    }
 
-   internal void ToggleBackground()
+   internal void ApplyBackground(string color)
    {
-      if (Selection.Length == 0)
-      {
-         toggleFormatRun = ToggleApplyBackground;
-         BackgroundOn = !BackgroundOn;
-         InsertRunMode = true;
-
-         IEditable startInline = Selection.GetStartInline();
-
-         if (startInline != Selection.StartParagraph.Inlines.Last() && startInline.GetCharPosInInline(Selection.Start) == startInline.InlineText.Length)
-         {
-            IEditable nextInline = Selection.StartParagraph.Inlines[Selection.StartParagraph.Inlines.IndexOf(startInline) + 1];
-            bool nextRunBackground = nextInline.GetType() == typeof(EditableRun) && ((EditableRun)nextInline).Background == new SolidColorBrush(Colors.CornflowerBlue);
-            InsertRunMode = (BackgroundOn != nextRunBackground);
-            Selection.BiasForwardStart = !InsertRunMode;
-         }
-      }
-      else
-         Selection.ApplyFormatting(Inline.BackgroundProperty, new SolidColorBrush(Colors.CornflowerBlue));
+      Selection.ApplyFormatting(Inline.BackgroundProperty, new SolidColorBrush(Color.Parse(color)));
    }
 
    internal void ApplyFormattingRange(AvaloniaProperty avProperty, object value, TextRange textRange)
@@ -287,12 +249,8 @@ public partial class FlowDocument
       if (background.GetType() != typeof(SolidColorBrush))
          throw new Exception("Background must be set with a SolidColorBrush");
 
-      var colorDefault = new SolidColorBrush(Colors.Transparent).Color;
-      var colorNew = ((SolidColorBrush)background).Color;
-      Color applyBackground = (ieds.Where(ar => ar.GetType() == typeof(EditableRun) && (((EditableRun)ar).Background == null || ((SolidColorBrush)((EditableRun)ar).Background).Color == colorDefault)).Count() == 0) ? colorDefault : colorNew;
-
       foreach (IEditable ied in ieds)
-         if (ied.GetType() == typeof(EditableRun)) { ((EditableRun)ied).Background = new SolidColorBrush(applyBackground); }
+         if (ied.GetType() == typeof(EditableRun)) { ((EditableRun)ied).Background = (SolidColorBrush)background; }
    }
 
    private void ApplyForegroundRuns(List<IEditable> ieds, object foreground)
@@ -300,12 +258,8 @@ public partial class FlowDocument
       if (foreground.GetType() != typeof(SolidColorBrush))
          throw new Exception("Foreground must be set with a SolidColorBrush");
 
-      var colorDefault = new SolidColorBrush(Colors.Black).Color;
-      var colorNew = ((SolidColorBrush)foreground).Color;
-      Color applyForeground = (ieds.Where(ar => ar.GetType() == typeof(EditableRun) && (((EditableRun)ar).Foreground == null || ((SolidColorBrush)((EditableRun)ar).Foreground).Color == colorDefault)).Count() == 0) ? colorDefault : colorNew;
-
       foreach (IEditable ied in ieds)
-         if (ied.GetType() == typeof(EditableRun)) { ((EditableRun)ied).Foreground = new SolidColorBrush(applyForeground); }
+         if (ied.GetType() == typeof(EditableRun)) { ((EditableRun)ied).Foreground = (SolidColorBrush)foreground; }
    }
 
    private void ApplyFontStretchRuns(List<IEditable> ieds, object fontstretch)
@@ -320,15 +274,13 @@ public partial class FlowDocument
          if (ied.GetType() == typeof(EditableRun)) { ((EditableRun)ied).BaselineAlignment = (BaselineAlignment)baselinealignment; }
    }
 
-   internal void ResetInsertFormatting()
-   {
-      InsertRunMode = false;
-      BoldOn = false;
-      ItalicOn = false;
-      UnderlineOn = false;
-      ForegroundOn = false;
-      BackgroundOn = false;
-   }
+    internal void ResetInsertFormatting()
+    {
+        InsertRunMode = false;
+        BoldOn = false;
+        ItalicOn = false;
+        UnderlineOn = false;
+    }
 
    internal object? GetFormattingInline(AvaloniaProperty avProperty, IEditable inline)
    {
