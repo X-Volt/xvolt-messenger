@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         x:Class="Client.MVVM.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Title="Messenger" Icon="/Assets/Icon.png"
+        Title="X-Volt Messenger" Icon="/Assets/Icon.png"
         Width="840" MinWidth="840" Height="460" MinHeight="460"
         WindowStartupLocation="CenterScreen">
 
@@ -129,7 +129,7 @@
                         VerticalAlignment="Stretch">
 
                         <Button.Flyout>
-                            <Flyout Placement="TopEdgeAlignedLeft">
+                            <Flyout Placement="TopEdgeAlignedLeft" VerticalOffset="-5">
                                 <UniformGrid Name="ForegroundColors" 
                                     Rows="4" Columns="4" Width="120" Height="120" 
                                     RowSpacing="0" ColumnSpacing="0">
@@ -247,7 +247,7 @@
                         VerticalAlignment="Stretch">
 
                         <Button.Flyout>
-                            <Flyout Placement="TopEdgeAlignedLeft">
+                            <Flyout Placement="TopEdgeAlignedLeft" VerticalOffset="-5">
                                 <UniformGrid Name="BackgroundColors" 
                                     Rows="4" Columns="4" Width="120" Height="120" 
                                     RowSpacing="0" ColumnSpacing="0">
@@ -426,8 +426,303 @@
                         VerticalContentAlignment="Center" 
                         VerticalAlignment="Stretch" />
 
-                    <Image Source="/Assets/Smileys/icon_cool.png" Cursor="hand" 
-                        Margin="5,2,0,0" VerticalAlignment="Center" />
+                    <Button Name="SmileysBTN" Background="Transparent" Padding="0">
+                        <Image Source="/Assets/Smileys/icon_cool.png" 
+                            Margin="3,3,0,0" Height="32" Width="32" Cursor="hand" />
+                        
+                        <Button.Flyout>
+                            <Flyout Placement="TopEdgeAlignedLeft" VerticalOffset="-5">
+                                <UniformGrid Name="Smileys" 
+                                    Rows="4" Columns="10" Width="350" Height="146" 
+                                    RowSpacing="2" ColumnSpacing="0">
+
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Angel" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="angel" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_angel.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Arrow" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="arrow" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_arrow.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Big Grin" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="biggrin" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_biggrin.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Clap" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="clap" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_clap.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Confused" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="confused" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_confused.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Cool" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="cool" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_cool.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Crazy" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="crazy" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_crazy.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Cry" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="cry" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_cry.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Eek" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="eek" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_eek.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Eh" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="eh" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_eh.png" Cursor="hand" />
+                                    </Button>
+
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Evil" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="evil" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_evil.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Exclaim" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="exclaim" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_exclaim.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Geek" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="geek" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_geek.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Idea" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="idea" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_idea.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="LOL" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="lol" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_lol.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="LOL No" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="lolno" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_lolno.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Mad" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="mad" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_mad.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Mr. Green" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="mrgreen" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_mrgreen.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Neutral" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="neutral" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_neutral.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Problem" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="problem" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_problem.png" Cursor="hand" />
+                                    </Button>
+
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Question" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="question" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_question.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Razz" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="razz" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_razz.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Red Face" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="redface" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_redface.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Roll Eyes" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="rolleyes" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_rolleyes.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Sad" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="sad" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_sad.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Shh" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="shh" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_shh.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Shifty" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="shifty" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_shifty.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Sick" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="sick" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_sick.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Silent" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="silent" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_silent.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Smile" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="smile" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_smile.png" Cursor="hand" />
+                                    </Button>
+                                    
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Surprised" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="surprised" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_surprised.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Think" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="think" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_think.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Thumb Down" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="thumbdown" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_thumbdown.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Thumb Up" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="thumbup" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_thumbup.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Twisted" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="twisted" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_twisted.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Uber Geek" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="ugeek" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_ugeek.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Wave" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="wave" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_wave.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Wink" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="wink" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_wink.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="WTF" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="wtf" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_wtf.png" Cursor="hand" />
+                                    </Button>
+                                    <Button CornerRadius="0" Height="35" Width="35" 
+                                        ToolTip.Tip="Yawn" ToolTip.Placement="BottomEdgeAlignedLeft"
+                                        Background="Transparent" Padding="0"
+                                        Command="{Binding ChatMessageSmiley}" 
+                                        CommandParameter="yawn" Cursor="hand">
+                                        <Image Source="/Assets/Smileys/icon_yawn.png" Cursor="hand" />
+                                    </Button>
+                                </UniformGrid>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
                 </StackPanel>
             </Grid>
 

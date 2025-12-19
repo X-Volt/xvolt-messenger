@@ -93,6 +93,7 @@ namespace Client.MVVM.ViewModels
         public ReactiveCommand<Unit, Unit> ChatMessageBold { get; set; }
         public ReactiveCommand<Unit, Unit> ChatMessageItalic { get; set; }
         public ReactiveCommand<Unit, Unit> ChatMessageUnderline { get; set; }
+        public ReactiveCommand<string, Unit> ChatMessageSmiley { get; set; }
         public ReactiveCommand<Unit, Unit> ChatSend { get; set; }
 
         public ReactiveCommand<Unit, Unit> Settings { get; set; }
@@ -125,7 +126,6 @@ namespace Client.MVVM.ViewModels
             // TODO: test the editor with different text selection colors
             // TODO: test the editor with unusual chars and longer messages
             // TODO: get the chat page messages formatted properly
-            // TODO: get the smileys flyout working
             // TODO: get login / register working
             // TODO: get add / group buddies working
             // TODO: get group chats working
@@ -208,7 +208,12 @@ namespace Client.MVVM.ViewModels
             {
                 ChatMessage.ToggleUnderline();
             });
-            
+
+            ChatMessageSmiley = ReactiveCommand.Create((string smiley) =>
+            {
+                ChatMessage.ApplySmiley(smiley);
+            });
+
             ChatSend = ReactiveCommand.Create(() =>
             {
                 if (ChatMessage.Blocks.Count > 0) {
