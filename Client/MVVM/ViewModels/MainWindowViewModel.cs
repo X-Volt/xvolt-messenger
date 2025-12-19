@@ -89,6 +89,7 @@ namespace Client.MVVM.ViewModels
 
         public ReactiveCommand<string, Unit> ChatMessageForeground { get; set; }
         public ReactiveCommand<string, Unit> ChatMessageBackground { get; set; }
+        public ReactiveCommand<string, Unit> ChatMessageFontSize { get; set; }
         public ReactiveCommand<Unit, Unit> ChatMessageBold { get; set; }
         public ReactiveCommand<Unit, Unit> ChatMessageItalic { get; set; }
         public ReactiveCommand<Unit, Unit> ChatMessageUnderline { get; set; }
@@ -120,6 +121,14 @@ namespace Client.MVVM.ViewModels
         public MainWindowViewModel(IView view)
         {
             // TODO: move all commands to their own methods
+            // TODO: test the editor for text selection and cursor bugs
+            // TODO: test the editor with different text selection colors
+            // TODO: test the editor with unusual chars and longer messages
+            // TODO: get the chat page messages formatted properly
+            // TODO: get the smileys flyout working
+            // TODO: get login / register working
+            // TODO: get add / group buddies working
+            // TODO: get group chats working
 
             _view = view;
 
@@ -178,6 +187,11 @@ namespace Client.MVVM.ViewModels
                 ChatMessage.ApplyBackground(color);
                 _view.GetButton("ChatMessageBackgroundBTN").Flyout.Hide();
                 ChatMessageFocus();
+            });
+
+            ChatMessageFontSize = ReactiveCommand.Create((string size) =>
+            {
+                ChatMessage.ApplyFontSize(double.Parse(size));
             });
 
             ChatMessageBold = ReactiveCommand.Create(() =>

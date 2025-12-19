@@ -133,6 +133,11 @@ public partial class FlowDocument
    {
       Selection.ApplyFormatting(Inline.BackgroundProperty, new SolidColorBrush(Color.Parse(color)));
    }
+   
+   internal void ApplyFontSize(double size)
+   {
+      Selection.ApplyFormatting(Inline.FontSizeProperty, size);
+   }
 
    internal void ApplyFormattingRange(AvaloniaProperty avProperty, object value, TextRange textRange)
    {
