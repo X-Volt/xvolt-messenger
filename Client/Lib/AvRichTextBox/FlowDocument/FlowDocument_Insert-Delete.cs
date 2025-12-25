@@ -462,7 +462,10 @@ public partial class FlowDocument
         Undos.Add(new InsertImageUndo(Blocks.IndexOf(Selection.StartParagraph), runIdx + 1, this, Selection.Start));
         UpdateTextRanges(Selection.Start, 1);
 
-        SelectionExtendMode = ExtendMode.ExtendModeNone;
+        Selection.BiasForwardStart = true;
+        Selection.BiasForwardEnd = true;
+        Selection.End += 1;
+        Selection.CollapseToEnd();
 
         startPar.UpdateEditableRunPositions();
         startPar.CallRequestInlinesUpdate();

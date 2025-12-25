@@ -67,9 +67,8 @@ public class Paragraph : Block
    //private SolidColorBrush _SelectionForegroundBrush = new (Colors.Black);  // in Avalonia > 11.1, setting this alters the selection font for some reason
    //public SolidColorBrush SelectionForegroundBrush { get => _SelectionForegroundBrush; set { _SelectionForegroundBrush = value; NotifyPropertyChanged(nameof(SelectionForegroundBrush)); } }
 
-   private SolidColorBrush _SelectionBrush = LightBlueBrush;
+   private SolidColorBrush _SelectionBrush = new(Colors.CornflowerBlue);
    public SolidColorBrush SelectionBrush { get => _SelectionBrush; set { _SelectionBrush = value; NotifyPropertyChanged(nameof(SelectionBrush)); } }
-   internal static SolidColorBrush LightBlueBrush = new(Colors.LightBlue);
 
    internal double DistanceSelectionEndFromLeft = 0;
    internal double DistanceSelectionStartFromLeft = 0;

@@ -126,9 +126,8 @@ namespace Client.MVVM.ViewModels
 
         public MainWindowViewModel(IView view)
         {
-            // TODO: move all commands to their own methods
+            // TODO: separate code into partial classes
             // TODO: test the editor for text selection and cursor bugs
-            // TODO: test the editor with different text selection colors
             // TODO: test the editor with unusual chars and longer messages
             // TODO: get the chat page messages formatted properly
             // TODO: get login / register working
