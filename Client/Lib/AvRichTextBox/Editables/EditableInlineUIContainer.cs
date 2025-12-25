@@ -54,7 +54,7 @@ public class EditableInlineUIContainer : InlineUIContainer, IEditable, INotifyPr
    public string InlineToolTip => "";
 
    private bool _IsSelected = false;
-   public bool IsSelected { get => _IsSelected; set { _IsSelected = value; this.Child.Opacity = value ? 0.2 : 1; } }
+   public bool IsSelected { get => _IsSelected; set { _IsSelected = value; /* this.Child.Opacity = value ? 0.2 : 1; */ } }
 
 }
 

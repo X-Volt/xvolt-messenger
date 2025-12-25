@@ -454,6 +454,7 @@ public partial class FlowDocument
         if (Selection.GetStartInline() is not IEditable startInline) { Debug.WriteLine("skipping"); return; }
 
         int runIdx = startPar.Inlines.IndexOf(startInline);
+        if (runIdx == -1) { runIdx = 0; }
 
         SplitRunAtPos(Selection.Start, startInline, startInline.GetCharPosInInline(Selection.Start)); // creates an empty inline
         startPar.Inlines.Insert(runIdx + 1, new EditableInlineUIContainer(insertImage));
@@ -467,10 +468,6 @@ public partial class FlowDocument
         startPar.CallRequestInlinesUpdate();
         startPar.CallRequestTextLayoutInfoStart();
         startPar.CallRequestTextLayoutInfoEnd();
-
-        Select(Selection.Start + 2, 0);
-        Selection.BiasForwardStart = true;
-        Selection.BiasForwardEnd = true;
 
         ScrollInDirection!(1);
     }

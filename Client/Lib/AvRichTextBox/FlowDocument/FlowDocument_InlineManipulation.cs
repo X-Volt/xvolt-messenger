@@ -196,13 +196,13 @@ public partial class FlowDocument
 
    internal List<IEditable> SplitRunAtPos(int charPos, IEditable inlineToSplit, int splitPos)
    {
-      //if (inlineToSplit.IsUIContainer)
-      //   return [new EditableRun(""), inlineToSplit];
+      if (inlineToSplit.IsUIContainer)
+         return [new EditableRun(""), inlineToSplit];
 
       ObservableCollection<IEditable> inlines = GetContainingParagraph(charPos).Inlines;
       int runIdx = inlines.IndexOf(inlineToSplit);
 
-      //splitPos = Math.Min(splitPos, inlineToSplit.InlineLength);
+      splitPos = Math.Min(splitPos, inlineToSplit.InlineLength);
 
       string part2Text = inlineToSplit.InlineText[splitPos..];
 
