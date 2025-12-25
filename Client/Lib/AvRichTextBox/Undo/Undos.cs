@@ -218,8 +218,28 @@ internal class InsertLineBreakUndo(int insertParIndex, int insertInlineIdx, Flow
          flowDoc.Selection.Start = origSelectionStart;
          flowDoc.Selection.End = flowDoc.Selection.Start;
       }
-      catch { Debug.WriteLine("Failed InsertCharUndo at inline idx: " + insertInlineIdx); }
+      catch { Debug.WriteLine("Failed InsertLineBreakUndo at inline idx: " + insertInlineIdx); }
 
    }
 }
 
+internal class InsertImageUndo(int insertParIndex, int insertInlineIdx, FlowDocument flowDoc, int origSelectionStart) : IUndo
+{
+    public int UndoEditOffset => -1;
+    public bool UpdateTextRanges => true;
+
+    public void PerformUndo()
+    {
+        try
+        {
+            if (flowDoc.Blocks[insertParIndex] is not Paragraph thisPar) return;
+            if (thisPar.Inlines[insertInlineIdx] is not EditableInlineUIContainer thisImage) return;
+            thisPar.Inlines.Remove(thisImage);
+            thisPar.CallRequestInlinesUpdate();
+            flowDoc.UpdateBlockAndInlineStarts(insertParIndex);
+            flowDoc.Selection.Start = origSelectionStart;
+            flowDoc.Selection.End = flowDoc.Selection.Start;
+        }
+        catch { Debug.WriteLine("Failed InsertImageUndo at inline idx: " + insertInlineIdx); }
+    }
+}

@@ -1,11 +1,12 @@
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Client.MVVM.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO.Compression;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -306,9 +307,30 @@ public partial class XamlConversions
                                        img.Height = double.Parse(attC.Value);
                                        break;
 
-                                    case "Stretch":
-                                       img.Stretch = Stretch.Fill; // leave fixed for now 
+                                    // case "Stretch":
+                                    //    img.Stretch = Stretch.Fill; // leave fixed for now 
+                                    //    break;
+
+                                    case "Name":
+                                       if (!String.IsNullOrEmpty(attC.Value))
+                                       {
+                                          img.Name = attC.Value;
+                                          
+                                          var nameParts = img.Name.Split(":");
+
+                                          switch(nameParts[0])
+                                          {
+                                             case "smiley" :
+                                                img.Source = new Bitmap(SmileyModel.SourcePath + nameParts[1]);
+                                                break;
+                                          }
+                                       }
                                        break;
+
+                                    // default:
+                                    //    var imgProperty = img.GetType().GetProperty(attC.Name);
+                                    //    imgProperty.SetValue(img, attC.Value);
+                                    //    break;
                                  }
                               }
 

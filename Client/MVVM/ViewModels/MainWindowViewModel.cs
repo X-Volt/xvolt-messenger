@@ -6,7 +6,9 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
+using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using AvRichTextBox;
 using ReactiveUI;
@@ -93,7 +95,10 @@ namespace Client.MVVM.ViewModels
         public ReactiveCommand<Unit, Unit> ChatMessageBold { get; set; }
         public ReactiveCommand<Unit, Unit> ChatMessageItalic { get; set; }
         public ReactiveCommand<Unit, Unit> ChatMessageUnderline { get; set; }
+
+        public ObservableCollection<SmileyModel> ChatMessageSmileys { get; set; }
         public ReactiveCommand<string, Unit> ChatMessageSmiley { get; set; }
+        
         public ReactiveCommand<Unit, Unit> ChatSend { get; set; }
 
         public ReactiveCommand<Unit, Unit> Settings { get; set; }
@@ -211,12 +216,227 @@ namespace Client.MVVM.ViewModels
 
             ChatMessageSmiley = ReactiveCommand.Create((string smiley) =>
             {
-                ChatMessage.ApplySmiley(smiley);
+                var image = new Image();
+                image.Name = "smiley:" + smiley;
+                image.Source = new Bitmap(SmileyModel.SourcePath + smiley);
+                image.Height = 20;
+                image.Width = 20;
+
+                ChatMessage.InsertImage(image);
+                _view.GetButton("SmileysBTN").Flyout.Hide();
+                ChatMessageFocus();
             });
+
+            ChatMessageSmileys = new ObservableCollection<SmileyModel>(
+                new List<SmileyModel>
+                {
+                    new SmileyModel {
+                        Name = "Angel", 
+                        Source = "icon_angel.png", 
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Arrow",
+                        Source = "icon_arrow.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Big Grin",
+                        Source = "icon_biggrin.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Clap",
+                        Source = "icon_clap.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Confused",
+                        Source = "icon_confused.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Cool",
+                        Source = "icon_cool.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Crazy",
+                        Source = "icon_crazy.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Cry",
+                        Source = "icon_cry.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Eek",
+                        Source = "icon_eek.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Eh",
+                        Source = "icon_eh.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Evil",
+                        Source = "icon_evil.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Exclaim",
+                        Source = "icon_exclaim.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Geek",
+                        Source = "icon_geek.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Idea",
+                        Source = "icon_idea.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "LOL",
+                        Source = "icon_lol.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "LOL No",
+                        Source = "icon_lolno.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Mad",
+                        Source = "icon_mad.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Mr. Green",
+                        Source = "icon_mrgreen.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Neutral",
+                        Source = "icon_neutral.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Problem",
+                        Source = "icon_problem.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Question",
+                        Source = "icon_question.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Razz",
+                        Source = "icon_razz.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Red Face",
+                        Source = "icon_redface.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Roll Eyes",
+                        Source = "icon_rolleyes.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Sad",
+                        Source = "icon_sad.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Shh",
+                        Source = "icon_shh.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Shifty",
+                        Source = "icon_shifty.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Sick",
+                        Source = "icon_sick.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Silent",
+                        Source = "icon_silent.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Smile",
+                        Source = "icon_smile.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Surprised",
+                        Source = "icon_surprised.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Think",
+                        Source = "icon_think.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Thumb Down",
+                        Source = "icon_thumbdown.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Thumb Up",
+                        Source = "icon_thumbup.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Twisted",
+                        Source = "icon_twisted.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Uber Geek",
+                        Source = "icon_ugeek.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Wave",
+                        Source = "icon_wave.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Wink",
+                        Source = "icon_wink.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "WTF",
+                        Source = "icon_wtf.png",
+                        Command = ChatMessageSmiley
+                    },
+                    new SmileyModel {
+                        Name = "Yawn",
+                        Source = "icon_yawn.png",
+                        Command = ChatMessageSmiley
+                    }
+                }
+            );
 
             ChatSend = ReactiveCommand.Create(() =>
             {
-                if (ChatMessage.Blocks.Count > 0) {
+                if (ChatMessage.Blocks.Count > 0)
+                {
                     _server.SendMessageToUser(_chatPageKey, ChatMessage.SaveXaml());
 
                     ChatMessage.NewDocument();

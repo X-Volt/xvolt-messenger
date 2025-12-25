@@ -1,18 +1,14 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Documents;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO.Compression;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using static AvRichTextBox.HelperMethods;
 using System.Xml;
 
@@ -214,6 +210,18 @@ public partial class XamlConversions
 
                      runXamlBuilder.Append("</Image>");
                   }
+
+                  runXamlBuilder.Append("</InlineUIContainer>");
+               }
+               else
+               {
+                  EditableInlineUIContainer eIUC = (EditableInlineUIContainer)ied;
+                  string InlineUIHeader = $"<InlineUIContainer FontFamily=\"{eIUC.FontFamily.Name}\" BaselineAlignment=\"{eIUC.BaselineAlignment}\">";
+                  runXamlBuilder.Append(InlineUIHeader);
+
+                  Image childImage = (Image)eIUC.Child;
+                  string ImageXaml = $"<Image Name=\"{childImage.Name}\" Height=\"{childImage.Height}\" Width=\"{childImage.Width}\" />";
+                  runXamlBuilder.Append(ImageXaml);
 
                   runXamlBuilder.Append("</InlineUIContainer>");
                }

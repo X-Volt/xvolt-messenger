@@ -1,10 +1,9 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
+﻿using Avalonia.Controls;
 using DynamicData;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace AvRichTextBox;
 
@@ -449,5 +448,30 @@ public partial class FlowDocument
 
    }
 
+    internal void InsertImage(Image insertImage)
+    {
+        Paragraph startPar = Selection.StartParagraph;
+        if (Selection.GetStartInline() is not IEditable startInline) { Debug.WriteLine("skipping"); return; }
 
+        int runIdx = startPar.Inlines.IndexOf(startInline);
+
+        SplitRunAtPos(Selection.Start, startInline, startInline.GetCharPosInInline(Selection.Start)); // creates an empty inline
+        startPar.Inlines.Insert(runIdx + 1, new EditableInlineUIContainer(insertImage));
+
+        Undos.Add(new InsertImageUndo(Blocks.IndexOf(Selection.StartParagraph), runIdx + 1, this, Selection.Start));
+        UpdateTextRanges(Selection.Start, 1);
+
+        SelectionExtendMode = ExtendMode.ExtendModeNone;
+
+        startPar.UpdateEditableRunPositions();
+        startPar.CallRequestInlinesUpdate();
+        startPar.CallRequestTextLayoutInfoStart();
+        startPar.CallRequestTextLayoutInfoEnd();
+
+        Select(Selection.Start + 2, 0);
+        Selection.BiasForwardStart = true;
+        Selection.BiasForwardEnd = true;
+
+        ScrollInDirection!(1);
+    }
 }

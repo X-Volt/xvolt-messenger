@@ -139,11 +139,6 @@ public partial class FlowDocument
       Selection.ApplyFormatting(Inline.FontSizeProperty, size);
    }
    
-   internal void ApplySmiley(string smiley)
-   {
-      // Selection.ApplyFormatting(Inline.FontSizeProperty, smmiley);
-   }
-
    internal void ApplyFormattingRange(AvaloniaProperty avProperty, object value, TextRange textRange)
    {
       List<IEditable> newInlines = CreateNewInlinesForRange(textRange);

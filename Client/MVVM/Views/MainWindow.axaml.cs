@@ -32,6 +32,11 @@ namespace Client.MVVM.Views
             LoginUsernameTB.Focus(NavigationMethod.Pointer);
         }
 
+        public Button GetButton(string name)
+        {
+            return this.GetControl<Button>(name);
+        }
+
         public RichTextBox GetRichTextBox(string name)
         {
             return this.GetControl<RichTextBox>(name);
@@ -40,11 +45,6 @@ namespace Client.MVVM.Views
         public TextBox GetTextBox(string name)
         {
             return this.GetControl<TextBox>(name);
-        }
-
-        public Button GetButton(string name)
-        {
-            return this.GetControl<Button>(name);
         }
     }
 }

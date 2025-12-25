@@ -44,10 +44,6 @@
         <Setter Property="Background" Value="Transparent" />
     </Style>
 
-    <Style Selector="#Smileys > Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="Transparent" />
-    </Style>
-
     <Style Selector="#ChatSend:pointerover /template/ ContentPresenter#PART_ContentPresenter">
         <Setter Property="Background" Value="Red" />
         <Setter Property="TextBlock.Foreground" Value="White" />
