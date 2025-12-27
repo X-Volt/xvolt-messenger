@@ -39,6 +39,7 @@ public partial class FlowDocument
             ((Paragraph)b).Inlines.Where(iline => b.StartInDoc + iline.TextPositionOfInlineInParagraph + iline.InlineLength >= trange.Start &&
              b.StartInDoc + iline.TextPositionOfInlineInParagraph < trange.End)).ToList().ConvertAll(il => il.Clone());
 
+      /* TODO: Why is this here?
       IEditable firstInline = AllSelectedInlines[0];
       int firstInlineSplitIndex = Math.Min(trange.Start - startPar!.StartInDoc - firstInline.TextPositionOfInlineInParagraph, firstInline.InlineText.Length);
 
@@ -55,6 +56,7 @@ public partial class FlowDocument
          firstInline.InlineText = firstInline.InlineText[firstInlineSplitIndex ..];
          lastInline.InlineText = lastInline.InlineText[..lastInlineSplitIndex];
       }
+      */
 
       return AllSelectedInlines;
 

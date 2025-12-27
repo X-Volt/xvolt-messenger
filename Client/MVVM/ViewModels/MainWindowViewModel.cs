@@ -127,8 +127,7 @@ namespace Client.MVVM.ViewModels
         public MainWindowViewModel(IView view)
         {
             // TODO: separate code into partial classes
-            // TODO: test the editor for text selection and cursor bugs
-            // TODO: test the editor with unusual chars and longer messages
+            // TODO: test the editor with unusual chars
             // TODO: get the chat page messages formatted properly
             // TODO: get login / register working
             // TODO: get add / group buddies working
@@ -216,10 +215,9 @@ namespace Client.MVVM.ViewModels
             ChatMessageSmiley = ReactiveCommand.Create((string smiley) =>
             {
                 var image = new Image();
-                image.Name = "smiley:" + smiley;
+                // image.Name = "smiley:" + smiley;
                 image.Source = new Bitmap(SmileyModel.SourcePath + smiley);
-                image.Height = 20;
-                image.Width = 20;
+                image.Height = 20; image.Width = 20;
 
                 ChatMessage.InsertImage(image);
                 _view.GetButton("SmileysBTN").Flyout.Hide();

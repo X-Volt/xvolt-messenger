@@ -220,8 +220,17 @@ public partial class XamlConversions
                   runXamlBuilder.Append(InlineUIHeader);
 
                   Image childImage = (Image)eIUC.Child;
-                  string ImageXaml = $"<Image Name=\"{childImage.Name}\" Height=\"{childImage.Height}\" Width=\"{childImage.Width}\" />";
-                  runXamlBuilder.Append(ImageXaml);
+                  
+                  using (MemoryStream memoryStream = new MemoryStream())
+                  {
+                     var childImageSource = (Bitmap)childImage.Source!;
+                     childImageSource.Save(memoryStream);
+
+                     var childImageBase64 = Convert.ToBase64String(memoryStream.ToArray());
+
+                     string ImageXaml = $"<Image Source=\"{childImageBase64}\" Height=\"{childImage.Height}\" Width=\"{childImage.Width}\" />";
+                     runXamlBuilder.Append(ImageXaml);
+                  }
 
                   runXamlBuilder.Append("</InlineUIContainer>");
                }

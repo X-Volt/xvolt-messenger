@@ -311,21 +311,33 @@ public partial class XamlConversions
                                     //    img.Stretch = Stretch.Fill; // leave fixed for now 
                                     //    break;
 
-                                    case "Name":
+                                    case "Source":
                                        if (!String.IsNullOrEmpty(attC.Value))
                                        {
-                                          img.Name = attC.Value;
-                                          
-                                          var nameParts = img.Name.Split(":");
+                                          byte[] imageBytes = Convert.FromBase64String(attC.Value);
 
-                                          switch(nameParts[0])
+                                          using (MemoryStream memoryStream = new MemoryStream(imageBytes))
                                           {
-                                             case "smiley" :
-                                                img.Source = new Bitmap(SmileyModel.SourcePath + nameParts[1]);
-                                                break;
+                                             img.Source = new Bitmap(memoryStream);
                                           }
                                        }
                                        break;
+
+                                    // case "Name":
+                                    // if (!String.IsNullOrEmpty(attC.Value))
+                                    // {
+                                    //    img.Name = attC.Value;
+                                    //    
+                                    //    var nameParts = img.Name.Split(":");
+                                    // 
+                                    //    switch(nameParts[0])
+                                    //    {
+                                    //       case "smiley" :
+                                    //          img.Source = new Bitmap(SmileyModel.SourcePath + nameParts[1]);
+                                    //          break;
+                                    //    }
+                                    // }
+                                    // break;
 
                                     // default:
                                     //    var imgProperty = img.GetType().GetProperty(attC.Name);

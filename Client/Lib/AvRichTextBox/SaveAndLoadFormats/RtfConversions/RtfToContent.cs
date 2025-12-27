@@ -183,7 +183,7 @@ internal static partial class RtfConversions
             {
                Width = TwipToPix(rtfImage.Width),
                Height = TwipToPix(rtfImage.Height),
-               Stretch = Stretch.Fill
+               // Stretch = Stretch.Fill
             };
 
             MemoryStream memStream = new(rtfImage.Data) { Position = 0 };
