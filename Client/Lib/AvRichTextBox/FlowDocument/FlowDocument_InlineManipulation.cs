@@ -88,7 +88,10 @@ public partial class FlowDocument
       IEditable insertLastInline = lastInline.Clone();
 
       int lastInlineSplitIndex = trange.End - endPar!.StartInDoc - lastInline.TextPositionOfInlineInParagraph;
-      bool RangeEndsAtInlineEnd = lastInlineSplitIndex >= lastInline.InlineLength;
+
+      // this is causing duplicated text when you select to the
+      // end of a line and apply formatting (like FontSize)
+      bool RangeEndsAtInlineEnd = false; // lastInlineSplitIndex >= lastInline.InlineLength;
 
       string lastInlineText = lastInline.InlineText;
       int indexOfLastInline = endPar.Inlines.IndexOf(lastInline);

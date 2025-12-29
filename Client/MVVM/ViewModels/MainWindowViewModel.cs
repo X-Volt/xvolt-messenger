@@ -127,7 +127,6 @@ namespace Client.MVVM.ViewModels
         public MainWindowViewModel(IView view)
         {
             // TODO: separate code into partial classes
-            // TODO: test the editor with unusual chars
             // TODO: get the chat page messages formatted properly
             // TODO: get login / register working
             // TODO: get add / group buddies working
@@ -195,21 +194,25 @@ namespace Client.MVVM.ViewModels
             ChatMessageFontSize = ReactiveCommand.Create((string size) =>
             {
                 ChatMessage.ApplyFontSize(double.Parse(size));
+                ChatMessageFocus();
             });
 
             ChatMessageBold = ReactiveCommand.Create(() =>
             {
                 ChatMessage.ToggleBold();
+                ChatMessageFocus();
             });
 
             ChatMessageItalic = ReactiveCommand.Create(() =>
             {
                 ChatMessage.ToggleItalic();
+                ChatMessageFocus();
             });
 
             ChatMessageUnderline = ReactiveCommand.Create(() =>
             {
                 ChatMessage.ToggleUnderline();
+                ChatMessageFocus();
             });
 
             ChatMessageSmiley = ReactiveCommand.Create((string smiley) =>
