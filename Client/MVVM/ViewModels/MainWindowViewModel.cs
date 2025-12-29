@@ -180,14 +180,14 @@ namespace Client.MVVM.ViewModels
             ChatMessageForeground = ReactiveCommand.Create((string color) =>
             {
                 ChatMessage.ApplyForeground(color);
-                _view.GetButton("ChatMessageForegroundBTN").Flyout.Hide();
+                _view.GetButton("ChatMessageForegroundBTN").Flyout!.Hide();
                 ChatMessageFocus();
             });
             
             ChatMessageBackground = ReactiveCommand.Create((string color) =>
             {
                 ChatMessage.ApplyBackground(color);
-                _view.GetButton("ChatMessageBackgroundBTN").Flyout.Hide();
+                _view.GetButton("ChatMessageBackgroundBTN").Flyout!.Hide();
                 ChatMessageFocus();
             });
 
@@ -223,7 +223,7 @@ namespace Client.MVVM.ViewModels
                 image.Height = 20; image.Width = 20;
 
                 ChatMessage.InsertImage(image);
-                _view.GetButton("SmileysBTN").Flyout.Hide();
+                _view.GetButton("SmileysBTN").Flyout!.Hide();
                 ChatMessageFocus();
             });
 

@@ -52,7 +52,7 @@ public partial class RichTextBox : UserControl
 
       AdornerLayer.SetAdorner(DocIC, _CaretRect);
 
-      InitializeBlinkAnimation();
+      this.blinkAnimation = InitializeBlinkAnimation();
 
       this.TextInput += RichTextBox_TextInput;
 
@@ -210,7 +210,7 @@ public partial class RichTextBox : UserControl
       }
    }
    
-   private readonly Rectangle? _CaretRect = new()
+   private readonly Rectangle _CaretRect = new()
    {
       StrokeThickness = 2,
       Stroke = Brushes.Black,
@@ -309,9 +309,9 @@ public partial class RichTextBox : UserControl
      
    private Animation blinkAnimation;
 
-   private void InitializeBlinkAnimation()
+   private Animation InitializeBlinkAnimation()
    {
-      blinkAnimation = new Animation()
+      return new Animation()
       {
          Duration = TimeSpan.FromSeconds(0.85),
          FillMode = FillMode.Forward,
