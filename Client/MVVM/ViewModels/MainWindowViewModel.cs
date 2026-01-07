@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using AvRichTextBox;
 using ReactiveUI;
@@ -39,6 +40,15 @@ namespace Client.MVVM.ViewModels
 
             ChatUsers = new ObservableCollection<UserModel>();
             ChatUserViewMessagesCommand = ReactiveCommand.Create<string>(ChatUserViewMessages);
+            ChatGroups = new ObservableCollection<GroupModel>(
+                new List<GroupModel>
+                {
+                    new GroupModel {
+                        Name = "Buddies",
+                        Users = ChatUsers
+                    }
+                }
+            );
 
             ChatMessage = new FlowDocument();
 
@@ -62,6 +72,8 @@ namespace Client.MVVM.ViewModels
             NewsCommand = ReactiveCommand.Create(News);
 
             ArtworkCommand = ReactiveCommand.Create(Artwork);
+
+            DebugApp();
         }
     }
 }

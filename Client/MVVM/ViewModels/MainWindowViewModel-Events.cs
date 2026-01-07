@@ -22,20 +22,20 @@ namespace Client.MVVM.ViewModels
             {
                 var user = new UserModel
                 {
-                    UID = _server.PacketReader.ReadMessage(),
-                    Username = _server.PacketReader.ReadMessage(),
+                    GUID = _server.PacketReader.ReadMessage(),
+                    Name = _server.PacketReader.ReadMessage(),
                     Command = ChatUserViewMessagesCommand
                 };
 
-                if (ChatUsers.Where(x => x.UID == user.UID).FirstOrDefault() == null)
+                if (ChatUsers.Where(x => x.GUID == user.GUID).FirstOrDefault() == null)
                 {
                     Dispatcher.UIThread.Invoke(() =>
                     {
                         ChatUsers.Add(user);
 
-                        if (user.Username == LoginUsername)
+                        if (user.Name == LoginUsername)
                         {
-                            _username = user.Username;
+                            _username = user.Name;
                             _chatPageKey = _username;
 
                             LoginUsername = "";
@@ -59,10 +59,10 @@ namespace Client.MVVM.ViewModels
         {
             if (_server.PacketReader != null)
             {
-                var uid = _server.PacketReader.ReadMessage();
-                var username = _server.PacketReader.ReadMessage();
+                var guid = _server.PacketReader.ReadMessage();
+                var name = _server.PacketReader.ReadMessage();
 
-                var user = ChatUsers.Where(x => x.UID == uid).FirstOrDefault();
+                var user = ChatUsers.Where(x => x.GUID == guid).FirstOrDefault();
 
                 Dispatcher.UIThread.Invoke(() =>
                 {
@@ -73,22 +73,22 @@ namespace Client.MVVM.ViewModels
 
                     string? pageXaml;
 
-                    if (ChatPages.TryGetValue(username, out pageXaml))
+                    if (ChatPages.TryGetValue(name, out pageXaml))
                     {
                         var pageToUpdate = InitPage();
                         pageToUpdate.LoadXaml(pageXaml);
 
                         var messageParagraph = new Paragraph();
-                        var messageDisconnected = $"[{DateTime.Now}]: [{username}]: Disconnected";
+                        var messageDisconnected = $"[{DateTime.Now}]: [{name}]: Disconnected";
                         messageParagraph.Inlines.Add(new EditableRun(messageDisconnected));
 
                         pageToUpdate.Blocks.Add(messageParagraph);
 
-                        ChatPages[username] = pageToUpdate.SaveXaml();
+                        ChatPages[name] = pageToUpdate.SaveXaml();
 
-                        if (username == _chatPageKey)
+                        if (name == _chatPageKey)
                         {
-                            ChatPage.LoadXaml(ChatPages[username]);
+                            ChatPage.LoadXaml(ChatPages[name]);
                         }
                     }
                 });
@@ -99,7 +99,7 @@ namespace Client.MVVM.ViewModels
         {
             if (_server.PacketReader != null)
             {
-                var uid = _server.PacketReader.ReadMessage();
+                var guid = _server.PacketReader.ReadMessage();
                 var usernameFrom = _server.PacketReader.ReadMessage();
                 var usernameTo = _server.PacketReader.ReadMessage();
                 var message = _server.PacketReader.ReadMessage();

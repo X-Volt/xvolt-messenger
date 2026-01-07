@@ -25,11 +25,6 @@
         <Setter Property="TextBlock.Foreground" Value="White" />
     </Style>
 
-    <Style Selector="#UsersList > Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="LightGray" />
-        <Setter Property="TextBlock.Foreground" Value="Black" />
-    </Style>
-
     <Style Selector="#ForegroundColors > Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="BorderBrush" Value="Black" />

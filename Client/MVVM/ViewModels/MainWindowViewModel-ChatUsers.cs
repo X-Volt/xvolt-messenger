@@ -11,6 +11,7 @@ namespace Client.MVVM.ViewModels
     {
         public ObservableCollection<UserModel> ChatUsers { get; set; }
         public ReactiveCommand<string, Unit> ChatUserViewMessagesCommand { get; set; }
+        public ObservableCollection<GroupModel> ChatGroups { get; set; }
 
         public void ChatUserViewMessages(string username)
         {
